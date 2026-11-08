@@ -1,0 +1,31 @@
+services:
+  api:
+    build: .
+    env_file: .env
+    environment:
+      LAB_DB: /app/var/lab.db
+    ports: ["127.0.0.1:8765:8765"]
+    volumes: ["lab-data:/app/var"]
+    restart: unless-stopped
+    init: true
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: ["ALL"]
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8765/health/ready')"]
+      interval: 15s
+      timeout: 3s
+      retries: 3
+  worker:
+    build: .
+    command: ["python", "-m", "platform_lab.worker"]
+    env_file: .env
+    environment:
+      LAB_DB: /app/var/lab.db
+    volumes: ["lab-data:/app/var"]
+    restart: unless-stopped
+    init: true
+    stop_grace_period: 150s
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: ["ALL"]
+volumes:
+  lab-data:

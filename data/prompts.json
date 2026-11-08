@@ -1,0 +1,10 @@
+{
+  "baseline": {
+    "complete_answers": false,
+    "ignore_document_instructions": false
+  },
+  "candidate": {
+    "complete_answers": true,
+    "ignore_document_instructions": true
+  }
+}
